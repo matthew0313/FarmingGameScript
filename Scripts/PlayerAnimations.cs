@@ -1,0 +1,14 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerAnimations : MonoBehaviour
+{
+    [SerializeField] Animator Animator;
+    public void AnimationEquippedState(bool a){
+        Animator.SetBool("Equipped", a);
+    }
+    public void AnimationTilling(){
+        Animator.SetTrigger("Till");
+    }
+}
