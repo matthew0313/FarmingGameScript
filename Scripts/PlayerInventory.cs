@@ -30,6 +30,8 @@ public class PlayerInventory : MonoBehaviour
         CurrentSlot = EquipSlot;
         Equipped = Instantiate(Slots[EquipSlot].Info.Model);
         Item item = Equipped.GetComponent<Item>();
+        item.thisItemSlot = CurrentSlot;
+        item.PlayerInventory = this;
         item.PlayerActions = PlayerActions;
         item.PlayerAnimations = PlayerAnimations;
         Equipped.transform.position = EquippedItemLocator.position;

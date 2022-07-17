@@ -7,6 +7,7 @@ public class PlayerActions : MonoBehaviour
     public GameObject Land;
     [SerializeField] PlayerAnimations PlayerAnimations;
     [SerializeField] GameObject TilledLandModel;
+    public GameObject InstantiateModel;
     public UnityAction[] Actions = new UnityAction[10];
     public bool Indicate = false;
     GameObject SetLand = null;
@@ -29,5 +30,19 @@ public class PlayerActions : MonoBehaviour
         b.occupied = true;
         b.landObject = a;
         b.tilledLand = a.GetComponent<TilledLand>();
+    }
+    public void SeedPlanting(){
+        if(Land==null || Land.GetComponent<LandScript>().tilledLand==null){
+            return;
+        }
+        else SetLand = Land;
+        PlayerAnimations.AnimationSeedPlanting();
+    }
+    public void AnimationSeedPlant(){
+        LandScript b = SetLand.GetComponent<LandScript>();
+        GameObject a = Instantiate(InstantiateModel);
+        a.transform.SetParent(b.landObject);
+        a.transform.localPosition = new Vector3(0.0f, 0.5f, 0.0f);
+        a.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
     }
 }

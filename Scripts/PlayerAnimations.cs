@@ -11,4 +11,7 @@ public class PlayerAnimations : MonoBehaviour
     public void AnimationTilling(){
         Animator.SetTrigger("Till");
     }
+    public void AnimationSeedPlanting(){
+        Animator.SetTrigger("SeedPlant");
+    }
 }

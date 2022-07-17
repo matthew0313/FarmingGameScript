@@ -9,8 +9,12 @@ public class Item : MonoBehaviour
     public class ToolAction : UnityEvent{};
     public bool HoldAction = false;
     public bool IndicateLand = false;
+    public bool Consumed = false;
+    public GameObject InstantiatingModel;
     public PlayerActions PlayerActions;
     public PlayerAnimations PlayerAnimations;
+    public PlayerInventory PlayerInventory;
+    public int thisItemSlot;
     [SerializeField] Tfunc ActionType;
     public ToolAction action = new ToolAction();
 
@@ -28,9 +32,15 @@ public class Item : MonoBehaviour
     void Update(){
         if(action!=null){
             if(HoldAction&&Input.GetMouseButton(0)){
+                if(InstantiatingModel!=null){
+                    PlayerActions.InstantiateModel = InstantiatingModel;
+                }
                 action.Invoke();
             }
             else if(HoldAction==false&&Input.GetMouseButtonDown(0)){
+                if(InstantiatingModel!=null){
+                    PlayerActions.InstantiateModel = InstantiatingModel;
+                }
                 action.Invoke();
             }
         }
