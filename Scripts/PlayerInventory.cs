@@ -1,60 +1,70 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerInventory : MonoBehaviour
 {
-    public bool canSwitchEquipment = true;
-    [SerializeField] Popup InventoryPopup;
-    [SerializeField] Slot[] Slots = new Slot[40];
-    [SerializeField] Transform EquippedItemLocator;
-    [SerializeField] PlayerActions PlayerActions;
-    [SerializeField] PlayerAnimations PlayerAnimations;
-    [SerializeField] GameObject Equipped;
-    int EquipSlot;
-    int CurrentSlot = -1;
-    bool chainEquip;
-    void Update(){
-        for(int i = 0 ; i < 10 ; i++){
-            if(Input.GetKeyDown((KeyCode)(i+48)) && Slots[i+30].Info.Equippable && canSwitchEquipment){
-                EquipSlot = i+30;
-                if(Equipped!=null || CurrentSlot == EquipSlot){
-                    PlayerAnimations.AnimationEquippedState(false);
-                    if(CurrentSlot!=EquipSlot) chainEquip = true;
-                }
-                else PlayerAnimations.AnimationEquippedState(true);
-            }
+    public List<Item> Inventory = new List<Item>();
+    [SerializeField] RectTransform addIndicatorPositioner;
+    [SerializeField] GameObject addIndicator;
+    [SerializeField] int maxIndicators;
+    [SerializeField] float IndicatorRemoveTime = 3.0f;
+    [SerializeField] List<GameObject> Indicators = new List<GameObject>();
+    [SerializeField] Item TestItem;
+    [SerializeField] int IndicatorCount = 0;
+    float IndicatorRemoveTmp;
+    public void IndicatorRemove(){
+        IndicatorRemoveTmp = 0.0f;
+        GameObject r = Indicators[0];
+        Indicators.Remove(Indicators[0]);
+        Destroy(r);
+        IndicatorCount--;
+        for(int i = 0 ; i < IndicatorCount ; i++){
+            RectTransform e = Indicators[i].GetComponent<RectTransform>();
+            e.localPosition = new Vector3(0, e.localPosition.y-50.0f, 0);
         }
     }
-    public void Equip(){
-        CurrentSlot = EquipSlot;
-        Equipped = Instantiate(Slots[EquipSlot].Info.Model);
-        Item item = Equipped.GetComponent<Item>();
-        item.thisItemSlot = CurrentSlot;
-        item.PlayerInventory = this;
-        item.PlayerActions = PlayerActions;
-        item.PlayerAnimations = PlayerAnimations;
-        Equipped.transform.position = EquippedItemLocator.position;
-        Equipped.transform.rotation = EquippedItemLocator.rotation;
-        Equipped.transform.SetParent(EquippedItemLocator);
-        item.Begin();
+    void Update(){
+        if(IndicatorCount>0){
+            IndicatorRemoveTmp += Time.deltaTime;
+            if(IndicatorRemoveTmp>=IndicatorRemoveTime) IndicatorRemove();
+        }
+        if(Input.GetKeyDown((KeyCode)(97))){
+            Debug.Log('e');
+            AddItem(TestItem);
+        }
     }
-    public void Unequip(){
-        CurrentSlot = -1;
-        if(PlayerActions.Indicate) PlayerActions.Indicate = false;
-        Destroy(Equipped);
-        if(chainEquip) PlayerAnimations.AnimationEquippedState(true);
-        else enableSwitch();
+    public void AddItem(Item A){
+        bool exist = false;
+        for(int i = 0 ; i < Inventory.Count ; i++){
+            if(A.ItemName == Inventory[i].ItemName){
+                exist = true;
+                Item e;
+                e.ItemName = Inventory[i].ItemName;
+                e.Amount = Inventory[i].Amount + A.Amount;
+                Inventory[i] = e;
+                break;
+            }
+        }
+        if(exist==false){
+            Inventory.Add(A);
+        }
+        GameObject r = Instantiate(addIndicator);
+        if(IndicatorCount >= maxIndicators){
+            IndicatorRemove();
+        }
+        r.transform.SetParent(addIndicatorPositioner);
+        r.GetComponent<RectTransform>().localPosition = new Vector3(0.0f, 50.0f*IndicatorCount, 0.0f);
+        r.GetComponent<Text>().text = "+" + A.Amount + " " + A.ItemName.ToString();
+        Indicators.Add(r);
+        IndicatorCount++;
     }
-    public void disableSwitch(){
-        canSwitchEquipment = false;
-    }
-    public void enableSwitch(){
-        canSwitchEquipment = true;
-    }
-     
 }
-[System.Serializable] public struct Slot{
-    public ItemInfo Info;
+[System.Serializable] public struct Item{
+    public ItemList ItemName;
     public int Amount;
+}
+[System.Serializable] public enum ItemList{
+    Stone
 }
