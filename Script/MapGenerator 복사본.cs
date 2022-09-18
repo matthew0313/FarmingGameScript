@@ -11,16 +11,18 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] Transform mapObject;
     [SerializeField] LandScript[,] map = new LandScript[mapX*4,mapY*4];
     bool[,] occupied = new bool[mapX,mapY];
-    public void Generate(){
+    public async void Generate(){
         TestButton.SetActive(false);
-        for(int i = 0 ; i < mapX ; i++){
-            for(int k = 0 ; k < mapY ; k++){
-                if(occupied[i,k]==false){
-                    for(int o = 0 ; o < SpawnChunks.Length ; o++){
-                        if(Random.Range(0.0f, 100.0f)<=SpawnChunks[o].Chance){
-                            ChunkSpawn(o, i, k, Mathf.RoundToInt(Random.Range((float)SpawnChunks[o].NodeSizeMax, (float)SpawnChunks[o].NodeSizeMin)), 0);
-                        }
-                    }
+        for(int i = 0 ; i < SpawnChunks.Length ; i++){
+            int e = Random.Range(SpawnChunks[i].MinAmount, SpawnChunks[i].MaxAmount);
+            for(int k = 0 ; k < e ; k++){
+                int a = Random.Range(0, mapX), b = Random.Range(0, mapY);
+                if(occupied[a, b]==false){
+                    ChunkSpawn(i, a, b, Random.Range(SpawnChunks[i].NodeSizeMin, SpawnChunks[i].NodeSizeMax), 0);
+                }
+                else{
+                    k--;
+                    continue;
                 }
             }
         }
@@ -56,6 +58,6 @@ public class MapGenerator : MonoBehaviour
 }
 [System.Serializable] struct SC{
     public GameObject Chunk;
-    public float Chance;
+    public int MaxAmount, MinAmount;
     public int NodeSizeMax, NodeSizeMin;
 }

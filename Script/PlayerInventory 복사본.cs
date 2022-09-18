@@ -32,6 +32,7 @@ public class PlayerInventory : MonoBehaviour
         }
         if(Input.GetKeyDown((KeyCode)(97))){
             Debug.Log('e');
+            TestItem.Amount = Random.Range(1, 5);
             AddItem(TestItem);
         }
     }
