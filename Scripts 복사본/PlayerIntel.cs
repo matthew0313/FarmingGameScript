@@ -2,9 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Miner : BuildIdentifier
+public class PlayerIntel : MonoBehaviour
 {
-    public override void Begin(){
-
-    }
+   
 }
