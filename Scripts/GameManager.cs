@@ -17,6 +17,12 @@ public class GameManager : MonoBehaviour
 
     public int Money;
     public int Level;
+    public void Hide(GameObject O){
+        O.SetActive(false);
+    }
+    public void Show(GameObject O){
+        O.SetActive(true);
+    }
     int _Experience;
     public int Experience{
         get{

@@ -82,5 +82,4 @@ public class BuildScript : MonoBehaviour
 [System.Serializable] public struct Building{
     public GameObject Model;
     public GameObject PlaceModel;
-    public int Cost;
 }
