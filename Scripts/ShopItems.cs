@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class ShopItems : MonoBehaviour
 {
-    public Category[] Category;
+    [System.Serializable] public class q{
+        [SerializeField] public List<Item> Item;
+    }
+    [SerializeField] public List<q> Category;
 }
-public struct Item{
-    public Building Build;
+[System.Serializable] public struct Item{
+    [SerializeField] public Building Build;
     public string Description;
     public string Name;
-}
-public struct Category{
-    public (Item Item, int price)[] Items;
+    public string Category;
+    public int price;
+    public string[] Tags;
 }

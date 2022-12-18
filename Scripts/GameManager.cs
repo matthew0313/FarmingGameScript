@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
+    public Camera MainCam;
 
     public static GameManager instance{
         get{
@@ -14,15 +15,10 @@ public class GameManager : MonoBehaviour
             return _instance;
         }
     }
-
+    public List<string> Tags;
+    public List<InventoryItem> Inventory;
     public int Money;
     public int Level;
-    public void Hide(GameObject O){
-        O.SetActive(false);
-    }
-    public void Show(GameObject O){
-        O.SetActive(true);
-    }
     int _Experience;
     public int Experience{
         get{
@@ -41,4 +37,40 @@ public class GameManager : MonoBehaviour
     void LevelUp(){
 
     }
+    public void ShopEnter(ShopScript a){
+        MainCam.gameObject.Hide();
+        a.enabled = true;
+        a.ShopCamera.Show();
+    }
+    public void ShopExit(ShopScript a){
+        MainCam.gameObject.Show();
+        a.ShopCamera.Hide();
+        a.enabled = false;
+    }
+    public void InventoryAdd(Item It, int amount){
+        bool found = false;
+        for(int i = 0 ; i < Inventory.Count ; i++){
+            if(Inventory[i].Item.Name == It.Name){
+                found = true;
+                Inventory[i].Amount += amount;
+                break;
+            }
+        }
+        if(!found){
+            InventoryItem a = new InventoryItem();
+            a.Item = It;
+            a.Amount = amount;
+            Inventory.Add(a);
+            for(int i = 0 ; i < It.Tags.Length ; i++){
+                if(Tags.Find(x => x == It.Tags[i])==null){
+                    Tags.Add(It.Tags[i]);
+                }
+            }
+            Tags.Sort();
+        }
+    }
+}
+[System.Serializable] public class InventoryItem{
+    public Item Item;
+    public int Amount;
 }

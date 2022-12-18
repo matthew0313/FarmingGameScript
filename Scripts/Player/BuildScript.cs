@@ -16,6 +16,7 @@ public class BuildScript : MonoBehaviour
     bool canBuild = false;
     [SerializeField] Building test;
     [SerializeField] float BuildAreaBound;
+    [SerializeField] BuildingScan M_BuildingScan;
     void Awake(){
 
     }
@@ -28,6 +29,7 @@ public class BuildScript : MonoBehaviour
         BuildingObject = Object;
         PlaceModel = Instantiate(BuildingObject.PlaceModel);
         PlaceModel_S = PlaceModel.GetComponent<PlaceModel>();
+        M_BuildingScan.enabled = false;
     }
     void Update(){
         if(BuildMode){
@@ -44,9 +46,9 @@ public class BuildScript : MonoBehaviour
             if(Input.GetKeyDown(KeyCode.R)){
                 PlaceModel.transform.Rotate(new Vector3(0.0f, 90.0f, 0.0f), Space.World);
             }
-            if(Input.GetKeyDown(KeyCode.T)){
+            /*if(Input.GetKeyDown(KeyCode.T)){
                 PlaceModel.transform.Rotate(new Vector3(90.0f, 0.0f, 0.0f), Space.World);
-            }
+            }*/
             if(Input.GetKeyDown(KeyCode.UpArrow)){
                 if(Input.GetKey(KeyCode.LeftShift)){
                     yHeight += gridSize*10.0f;
@@ -72,6 +74,7 @@ public class BuildScript : MonoBehaviour
                     if(!Input.GetKey(KeyCode.LeftShift)){
                         Destroy(PlaceModel);
                         BuildMode = false;
+                        M_BuildingScan.enabled = true;
                         Grid.SetActive(false);
                     }
                 }
